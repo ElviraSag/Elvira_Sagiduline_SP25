@@ -1,1 +1,0 @@
-# Elvira_Sagiduline_SP25
