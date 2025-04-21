@@ -1,0 +1,44 @@
+﻿1. How can one restrict access to certain columns of a database table?
+Access to specific columns in PostgreSQL can be restricted using column-level privileges. Instead of granting full access to a table, you can grant SELECT, INSERT, or UPDATE privileges on individual columns:
+GRANT SELECT (column1, column2) ON table_name TO role_name;
+This grants SELECT permission only on the specified columns. Other approaches include:
+Views: Create a view that includes only permitted columns and grant access to the view instead of the base table.
+
+CREATE VIEW limited_view AS SELECT allowed_column1, allowed_column2 FROM full_table;
+GRANT SELECT ON limited_view TO role_name;
+
+
+2. What is the difference between user identification and user authentication?
+User identification is the process of claiming an identity, usually by providing a username.
+
+User authentication is the process of verifying that identity, typically through a password, certificate, or other authentication method.
+
+3. What are the recommended authentication protocols for PostgreSQL?
+1. SCRAM-SHA-256: The most secure password-based authentication method in PostgreSQL, offering protection against various attacks including replay and man-in-the-middle. This is now the default in recent PostgreSQL versions.
+
+2. Client certificate authentication: Uses SSL client certificates for strong authentication, ideal for high-security environments.
+
+3. GSSAPI/Kerberos: Enterprise-level authentication that integrates with existing Kerberos infrastructures, offering single sign-on capabilities.
+
+4. LDAP Authentication: Integration with directory services for centralized user management.
+
+5. PAM Authentication: Pluggable Authentication Modules for integration with system-level authentication.
+
+4. What is proxy authentication in PostgreSQL and what is it for? Why does it make the previously discussed role-based access control easier to implement?
+Proxy authentication in PostgreSQL allows a user (the proxy) to temporarily take on the identity and privileges of another user (the target). Command is:
+SET ROLE target_user;
+When a privileged user executes this command, they switch their session to operate with the permissions of the target user. This is very useful when you need to perform an operation on behalf of another user. 
+Proxy authentication simplifies role-based access control (RBAC) implementation in several ways:
+   1. Connection management: Allows a single database connection to switch between different user contexts, reducing connection overhead.
+
+   2. Simplified application architecture: Applications can connect using a single service account but operate with appropriate permissions based on the end user.
+
+   3. Separation of connection authentication from authorization: The initial connection can be secured with strong authentication methods while authorization is handled through roles.
+
+   4. Enhanced audit trail: Actions performed via proxy authentication can be tracked to both the proxy user and the role they're acting as, improving accountability.
+
+   5. Centralized permission management: Permissions can be managed at the role level rather than at the user level, making it easier to implement the principle of least privilege.
+
+   6. Dynamic permission adjustment: Permissions can be adjusted at runtime by changing roles without requiring reconnection.
+
+   7. Reduced administrative overhead: Managing a smaller number of connection credentials while still maintaining fine-grained access control.
