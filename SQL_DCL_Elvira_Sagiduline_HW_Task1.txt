@@ -1,0 +1,34 @@
+﻿I have investigated what restriction are implemented in the dvd_rental database using several methods, First checking permission for the role one by one: 
+  
+
+  
+
+  
+
+
+
+
+
+Secondary, using query:
+
+
+
+
+SELECT grantee, privilege_type, table_schema, table_name
+FROM information_schema.role_table_grants
+WHERE table_schema NOT IN ('pg_catalog', 'information_schema');
+  
+
+
+
+
+
+SELECT rolname, rolcanlogin, rolsuper, rolcreaterole, rolcreatedb
+FROM pg_roles;
+
+
+  
+
+
+
+From all above I have made the conclusion that all rights and permissions are provided to one role ‘postgres’.
